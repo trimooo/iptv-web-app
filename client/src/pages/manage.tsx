@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import AddChannelDialog from "@/components/add-channel-dialog";
 import ImportM3uDialog from "@/components/import-m3u-dialog";
+import AddXtreamDialog from "@/components/add-xtream-dialog"; // New Xtream Dialog
 import { apiRequest } from "@/lib/queryClient";
 import { queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -35,41 +36,45 @@ export default function Manage() {
     }
   }
 
-  // ...existing code...
-
   return (
-    <div className="space-y-4 pl-10 relative z-10">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Manage Channels</h1>
-        <div className="flex gap-2">
+    <div className="relative z-10 p-6 space-y-6 bg-gray-900 min-h-screen text-white">
+      {/* Header Section */}
+      <div className="flex items-center justify-between pb-4 border-b border-gray-700">
+        <h1 className="text-3xl font-bold">📺 Manage Channels</h1>
+        <div className="flex gap-3">
           <ImportM3uDialog />
+          <AddXtreamDialog /> {/* New Xtream Button */}
           <AddChannelDialog />
         </div>
       </div>
-      <div className="rounded-md border relative">
+
+      {/* Table Container */}
+      <div className="rounded-lg bg-gray-800 shadow-lg p-4 border border-gray-700">
         <Table>
           <TableHeader>
-            <TableRow>
+            <TableRow className="bg-gray-700 text-white">
               <TableHead>Name</TableHead>
               <TableHead>Category</TableHead>
               <TableHead>URL</TableHead>
-              <TableHead className="w-[100px]">Actions</TableHead>
+              <TableHead className="w-[100px] text-center">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {channels?.map((channel) => (
-              <TableRow key={channel.id}>
+              <TableRow key={channel.id} className="hover:bg-gray-700">
                 <TableCell>{channel.name}</TableCell>
                 <TableCell>{channel.category}</TableCell>
-                <TableCell className="font-mono text-sm">{channel.url}</TableCell>
-                <TableCell>
+                <TableCell className="font-mono text-sm truncate max-w-[200px]">
+                  {channel.url}
+                </TableCell>
+                <TableCell className="text-center">
                   <Button
                     variant="ghost"
                     size="icon"
                     onClick={() => deleteChannel(channel.id)}
-                    className="relative z-50"
+                    className="hover:bg-red-500 hover:text-white transition"
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <Trash2 className="h-5 w-5" />
                   </Button>
                 </TableCell>
               </TableRow>

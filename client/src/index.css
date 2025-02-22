@@ -27,6 +27,9 @@
 [role="button"],
 button,
 a {
-  position: relative;
   z-index: 45;
+}
+
+.container {
+  max-width: 100%;
 }
