@@ -51,11 +51,13 @@ export default function Player() {
         </div>
       </div>
 
-      <VideoPlayer 
-        url={channel.url} 
-        title={channel.name}
-        className="aspect-video w-full"
-      />
+      <div className="relative overflow-hidden rounded-lg">
+        <VideoPlayer 
+          url={channel.url} 
+          title={channel.name}
+          className="aspect-video w-full"
+        />
+      </div>
 
       <Card>
         <CardContent className="pt-6">
