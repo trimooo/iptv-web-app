@@ -14,7 +14,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen bg-background">
-      <nav className="fixed bottom-0 left-0 z-50 w-full border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 md:top-0 md:border-b md:border-t-0">
+      <nav className="fixed bottom-0 left-0 z-50 w-full border-t md:top-0 md:border-b md:border-t-0">
         <div className="container flex h-16 items-center">
           <div className="flex w-full justify-around gap-2 md:justify-start">
             {navItems.map((item) => (
