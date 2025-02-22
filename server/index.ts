@@ -2,6 +2,8 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { initializeDatabase } from "./db";
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
 app.use(express.json());
@@ -58,13 +60,9 @@ app.use((req, res, next) => {
       serveStatic(app);
     }
 
-    const port = 5000;
-    server.listen({
-      port,
-      host: "0.0.0.0",
-      reusePort: true,
-    }, () => {
-      log(`serving on port ${port}`);
+    const port = process.env.PORT || 3000;
+    server.listen(port, () => {
+      log(`Server running at http://localhost:${port}`);
     });
   } catch (error) {
     console.error("Failed to start server:", error);

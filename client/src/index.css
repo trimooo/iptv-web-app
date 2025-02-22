@@ -11,3 +11,22 @@
     @apply font-sans antialiased bg-background text-foreground;
   }
 }
+
+/* ...existing code... */
+
+/* Add these styles to your global CSS */
+.dialog-overlay {
+  z-index: 50;
+}
+
+.dialog-content {
+  z-index: 51;
+}
+
+/* Ensure component buttons are clickable */
+[role="button"],
+button,
+a {
+  position: relative;
+  z-index: 45;
+}

@@ -13,17 +13,18 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      <nav className="fixed bottom-0 left-0 z-50 w-full border-t md:top-0 md:border-b md:border-t-0">
+    <div className="min-h-screen flex flex-col relative">
+      <nav className="fixed bottom-0 left-0 w-full border-t md:top-0 md:border-b md:border-t-0  ">
         <div className="container flex h-16 items-center">
           <div className="flex w-full justify-around gap-2 md:justify-start">
             {navItems.map((item) => (
               <Button
                 key={item.href}
                 variant={location === item.href ? "default" : "ghost"}
+                className="relative z-[41]"
                 asChild
               >
-                <Link href={item.href}>
+                <Link href={item.href} className="flex items-center">
                   <item.icon className="h-5 w-5" />
                   <span className="ml-2 hidden md:inline-block">
                     {item.label}
@@ -34,7 +35,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </div>
         </div>
       </nav>
-      <main className="container pb-20 pt-6 md:pb-6 md:pt-20">{children}</main>
+      <main className="container flex-1 pb-20 pt-6 md:pb-6 md:pt-20 relative z-[30]">
+        {children}
+      </main>
     </div>
   );
 }

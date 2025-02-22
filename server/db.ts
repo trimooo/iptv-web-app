@@ -1,49 +1,53 @@
 import 'dotenv/config';
-import { Pool, neonConfig } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-serverless';
-import ws from "ws";
+import pg from 'pg';
+import { drizzle } from 'drizzle-orm/node-postgres';
 import * as schema from "@shared/schema";
-import { migrate } from 'drizzle-orm/neon-serverless/migrator';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import path from 'path';
-import { scheduleBackups, backupDatabase } from './db-backup';
-
-neonConfig.webSocketConstructor = ws;
-
-if (!process.env.DATABASE_URL) {
-  throw new Error(
-    "DATABASE_URL must be set. Check your .env file and ensure it contains DATABASE_URL",
-  );
-}
+import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __dirname = path.dirname(__filename);
 
-export const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-export const db = drizzle({ client: pool, schema });
+const { Pool } = pg;
+
+// Database connection configuration
+const createPool = () => {
+  if (!process.env.DATABASE_URL) {
+    throw new Error("DATABASE_URL must be set in .env file");
+  }
+
+  return new Pool({ 
+    connectionString: process.env.DATABASE_URL,
+    ssl: false
+  });
+};
+
+export const pool = createPool();
+export const db = drizzle(pool, { schema });
 
 // Initialize database and start backup schedule
 export async function initializeDatabase() {
   try {
     console.log("Initializing database...");
-    console.log("Using database URL:", process.env.DATABASE_URL.split("@")[1]); // Log only the host part for security
+    
+    const client = await pool.connect();
+    console.log("Database connection successful");
+    await client.release();
 
-    // Run migrations
     await migrate(db, {
-      migrationsFolder: path.join(dirname(__dirname), 'migrations'),
+      migrationsFolder: path.join(__dirname, '..', 'migrations'),
     });
     console.log("Migrations completed successfully");
 
-    // Create initial backup
-    await backupDatabase();
-
-    // Start automatic backup schedule
-    scheduleBackups();
-
-    console.log("Database initialization completed");
+    return true;
   } catch (error) {
     console.error("Database initialization failed:", error);
-    throw error;
+    process.exit(1);
   }
+}
+
+// Cleanup function
+export async function closeDatabase() {
+  await pool.end();
 }

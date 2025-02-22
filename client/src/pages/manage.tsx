@@ -35,8 +35,10 @@ export default function Manage() {
     }
   }
 
+  // ...existing code...
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 pl-10 relative z-10">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Manage Channels</h1>
         <div className="flex gap-2">
@@ -44,7 +46,7 @@ export default function Manage() {
           <AddChannelDialog />
         </div>
       </div>
-      <div className="rounded-md border">
+      <div className="rounded-md border relative">
         <Table>
           <TableHeader>
             <TableRow>
@@ -65,6 +67,7 @@ export default function Manage() {
                     variant="ghost"
                     size="icon"
                     onClick={() => deleteChannel(channel.id)}
+                    className="relative z-50"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
