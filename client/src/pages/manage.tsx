@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import AddChannelDialog from "@/components/add-channel-dialog";
+import ImportM3uDialog from "@/components/import-m3u-dialog";
 import { apiRequest } from "@/lib/queryClient";
 import { queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -38,7 +39,10 @@ export default function Manage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Manage Channels</h1>
-        <AddChannelDialog />
+        <div className="flex gap-2">
+          <ImportM3uDialog />
+          <AddChannelDialog />
+        </div>
       </div>
       <div className="rounded-md border">
         <Table>

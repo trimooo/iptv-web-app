@@ -2,6 +2,8 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertChannelSchema } from "@shared/schema";
+import parser from "iptv-playlist-parser";
+import fetch from "node-fetch";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/channels", async (_req, res) => {
@@ -15,6 +17,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(404).json({ message: "Channel not found" });
     }
     res.json(channel);
+  });
+
+  app.post("/api/channels/parse-m3u", async (req, res) => {
+    try {
+      const { url } = req.body;
+      const response = await fetch(url);
+      const m3uContent = await response.text();
+
+      const result = parser.parse(m3uContent);
+      const channels = result.items.map((item) => ({
+        name: item.name || "Unknown Channel",
+        url: item.url,
+        category: item.group.title || "Other",
+        thumbnail: item.tvg.logo || "https://images.unsplash.com/photo-1501626438835-4be53d940ff8",
+      }));
+
+      res.json(channels);
+    } catch (error) {
+      res.status(400).json({ message: "Failed to parse M3U file" });
+    }
   });
 
   app.post("/api/channels", async (req, res) => {
