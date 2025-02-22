@@ -8,8 +8,8 @@ import { CalendarDays, Clock } from "lucide-react";
 import type { Channel } from "@shared/schema";
 
 export default function Player() {
-  const [location] = useLocation();
-  const id = new URLSearchParams(location.split("?")[1]).get("id");
+  const [, params] = useRoute("/player/:id");
+  const id = params?.id;
 
   const { data: channel, isLoading } = useQuery<Channel>({
     queryKey: [`/api/channels/${id}`],

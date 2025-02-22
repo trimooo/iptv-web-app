@@ -27,7 +27,7 @@ export default function ChannelCard({ channel }: ChannelCardProps) {
             className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          <Link href={`/player?id=${channel.id}`}>
+          <Link href={`/player/${channel.id}`}>
             <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
               <Button variant="secondary" className="gap-2">
                 <PlayCircle className="h-5 w-5" />
