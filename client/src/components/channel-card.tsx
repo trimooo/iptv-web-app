@@ -2,8 +2,37 @@ import { Link } from "wouter";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { PlayCircle, Clock } from "lucide-react";
+import { PlayCircle } from "lucide-react";
 import type { Channel } from "@shared/schema";
+
+interface ChannelCardProps {
+  channel: Channel;
+}
+
+export default function ChannelCard({ channel }: ChannelCardProps) {
+  return (
+    <Card className="overflow-hidden">
+      <CardContent className="p-0">
+        <img
+          src={channel.thumbnail}
+          alt={channel.name}
+          className="aspect-video w-full object-cover"
+        />
+      </CardContent>
+      <CardFooter className="flex items-center justify-between p-4">
+        <div>
+          <h3 className="font-semibold">{channel.name}</h3>
+          <Badge variant="secondary">{channel.category}</Badge>
+        </div>
+        <Button size="icon" asChild>
+          <Link href={`/player/${channel.id}`}>
+            <PlayCircle className="h-4 w-4" />
+          </Link>
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+}
 
 interface ChannelCardProps {
   channel: Channel;

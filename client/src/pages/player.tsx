@@ -78,3 +78,35 @@ export default function Player() {
     </div>
   );
 }
+import { useQuery } from "@tanstack/react-query";
+import { useRoute } from "wouter";
+import type { Channel } from "@shared/schema";
+
+export default function Player() {
+  const [, params] = useRoute("/player/:id");
+  const channelId = params?.id;
+
+  const { data: channel } = useQuery<Channel>({
+    queryKey: [`/api/channels/${channelId}`],
+    enabled: !!channelId,
+  });
+
+  if (!channel) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <div className="space-y-4">
+      <h1 className="text-2xl font-bold">{channel.name}</h1>
+      <video 
+        controls 
+        autoPlay 
+        className="w-full aspect-video rounded-lg"
+        key={channel.url}
+      >
+        <source src={channel.url} type="application/x-mpegURL" />
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  );
+}
