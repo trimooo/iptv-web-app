@@ -6,9 +6,9 @@ export const channels = pgTable("channels", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
   url: text("url").notNull(),
-  category: text("category").default("uncategorized"),
+  category: text("category").notNull().default("uncategorized"),
   thumbnail: text("thumbnail").notNull(),
-  createdAt: timestamp("created_at").defaultNow(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 export const insertChannelSchema = createInsertSchema(channels)
