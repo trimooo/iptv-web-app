@@ -10,35 +10,6 @@ interface ChannelCardProps {
 }
 
 export default function ChannelCard({ channel }: ChannelCardProps) {
-  return (
-    <Card className="overflow-hidden">
-      <CardContent className="p-0">
-        <img
-          src={channel.thumbnail}
-          alt={channel.name}
-          className="aspect-video w-full object-cover"
-        />
-      </CardContent>
-      <CardFooter className="flex items-center justify-between p-4">
-        <div>
-          <h3 className="font-semibold">{channel.name}</h3>
-          <Badge variant="secondary">{channel.category}</Badge>
-        </div>
-        <Button size="icon" asChild>
-          <Link href={`/player/${channel.id}`}>
-            <PlayCircle className="h-4 w-4" />
-          </Link>
-        </Button>
-      </CardFooter>
-    </Card>
-  );
-}
-
-interface ChannelCardProps {
-  channel: Channel;
-}
-
-export default function ChannelCard({ channel }: ChannelCardProps) {
   // Simulated EPG data - in a real app, this would come from an API
   const currentProgram = {
     title: "Live Program",
