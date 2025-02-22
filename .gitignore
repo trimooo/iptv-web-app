@@ -11,6 +11,11 @@ build
 dist
 server/public
 
+# Database
+*.sqlite
+*.db
+backups/
+
 # Misc
 .DS_Store
 .env
@@ -38,7 +43,3 @@ yarn-error.log*
 *.timestamp-*.mjs
 vite.config.ts.*
 *.tar.gz
-
-# Database
-*.sqlite
-*.db

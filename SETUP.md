@@ -2,112 +2,138 @@
 
 ## System Requirements
 
-1. Node.js (v20.x or later)
-2. PostgreSQL (v15 or later)
-3. Modern web browser (Chrome, Firefox, Safari, or Edge)
+### Core Requirements
+1. Node.js v20.x or later
+2. PostgreSQL v15 or later
+3. npm or yarn package manager
+4. Git
+
+### System Dependencies
+These will be installed automatically when running on Replit. For local development:
+1. `ws` - For WebSocket support
+2. `ffmpeg` - For video processing (optional)
+3. Build tools (gcc, make, etc.)
 
 ## Installation Steps
 
-1. Clone the repository:
+### 1. Clone and Setup
 ```bash
-git clone https://github.com/trimooo/iptv-web-app.git
+# Clone the repository
+git clone <your-repo-url>
 cd iptv-web-app
-```
 
-2. Install dependencies:
-```bash
+# Install dependencies
 npm install
 ```
 
-## Environment Variables
+### 2. Database Setup
 
-Create a `.env` file in the root directory with the following variables:
-
-```env
-DATABASE_URL=postgresql://username:password@host:port/database
+#### Using PostgreSQL
+1. Install PostgreSQL 15 or later
+2. Create a new database:
+```sql
+CREATE DATABASE iptv_db;
 ```
-
-## Database Setup
-
-1. Create a PostgreSQL database
-2. Update the DATABASE_URL in your `.env` file with your database credentials
-3. Run database migrations:
+3. Configure environment variables (see below)
+4. Run database migrations:
 ```bash
 npm run db:push
 ```
 
-## Running the Application
+### 3. Environment Variables
+Create a `.env` file in the root directory:
 
-1. Development mode:
+```env
+# Required
+DATABASE_URL=postgresql://username:password@host:port/database
+
+# Optional - Defaults will be used if not set
+PORT=5000
+NODE_ENV=development
+```
+
+### 4. Start the Application
+
+#### Development Mode
 ```bash
 npm run dev
 ```
-The application will be available at http://localhost:5000
+The application will be available at `http://localhost:5000`
 
-2. Production build:
+#### Production Mode
 ```bash
 npm run build
 npm start
 ```
 
-## Project Dependencies
+## Key Features and Dependencies
 
-The application uses the following major dependencies (all included in package.json):
-
-### Frontend
-- React 18
-- TanStack Query (React Query) v5
-- Wouter for routing
+### Frontend Dependencies
+- React 18 with TypeScript
+- TanStack Query v5 for data fetching
 - VideoJS for video playback
 - Shadcn UI components
 - Tailwind CSS for styling
-- Zod for validation
-- React Hook Form
+- Wouter for routing
 
-### Backend
-- Express
+### Backend Dependencies
+- Express.js
 - Drizzle ORM
-- IPTV Playlist Parser
 - PostgreSQL client
+- IPTV Playlist Parser
 
-### Development
+### Development Tools
 - TypeScript
 - Vite
 - ESBuild
 - Drizzle Kit
 
-## Features
-
-1. Channel Management
-   - Add/remove channels
-   - Import channels from M3U playlists
-   - Categorize channels
-
-2. Video Playback
-   - HLS stream support
-   - Full-screen mode
-   - Volume controls
-
-3. Channel Organization
-   - Category filtering
-   - Search functionality
-   - Grid view
 
 ## Troubleshooting
 
-1. Database Connection Issues
-   - Verify PostgreSQL is running
-   - Check DATABASE_URL in .env
-   - Ensure database exists and is accessible
+### Database Issues
+1. Verify PostgreSQL is running:
+```bash
+pg_isready
+```
 
-2. Video Playback Issues
-   - Verify stream URL is accessible
-   - Check browser console for errors
-   - Ensure HLS stream format is correct
+2. Check connection string:
+- Ensure DATABASE_URL format is correct
+- Test connection using psql
 
-3. M3U Import Issues
-   - Verify M3U URL is accessible
-   - Check M3U format is valid
-   - Ensure all required fields are present
+3. Migration Issues:
+```bash
+# Reset migrations
+rm -rf migrations/*
+npm run db:push
+```
 
-For any other issues, please check the console logs or create an issue in the GitHub repository.
+### Video Playback Issues
+1. Verify stream URL is accessible
+2. Check browser console for errors
+3. Ensure HLS stream format is correct
+
+### M3U Import Issues
+1. Verify M3U URL is accessible
+2. Check M3U format is valid
+3. Ensure required fields are present
+
+## Backup System
+
+The application includes an automatic backup system that:
+- Creates daily backups
+- Maintains the last 7 backups
+- Stores backups in the `backups` directory
+
+To manually create a backup:
+```bash
+# Start the application - backups are handled automatically
+npm run dev
+```
+
+## Support
+
+For issues and feature requests, please:
+1. Check the GitHub issues
+2. Create a new issue if needed
+3. Provide relevant logs and error messages
