@@ -1,0 +1,65 @@
+PS C:\Users\Admin\iptv-web-app> npm run dev
+
+> rest-express@1.0.0 dev
+> tsx server/index.ts
+
+Initializing database...
+Using database URL: ep-lively-heart-a6f9a44o.us-west-2.aws.neon.tech/neondb?sslmode=require
+Database initialization failed: error: relation "channels" already exists
+    at cn.parseErrorMessage (file:///C:/Users/Admin/iptv-web-app/node_modules/@neondatabase/serverless/index.mjs:1182:6)
+    at cn.handlePacket (file:///C:/Users/Admin/iptv-web-app/node_modules/@neondatabase/serverless/index.mjs:1143:13)
+    at cn.parse (file:///C:/Users/Admin/iptv-web-app/node_modules/@neondatabase/serverless/index.mjs:1127:36)
+    at v.<anonymous> (file:///C:/Users/Admin/iptv-web-app/node_modules/@neondatabase/serverless/index.mjs:1190:16)
+    at v.emit (file:///C:/Users/Admin/iptv-web-app/node_modules/@neondatabase/serverless/index.mjs:397:12)
+    at WebSocket.<anonymous> (file:///C:/Users/Admin/iptv-web-app/node_modules/@neondatabase/serverless/index.mjs:987:80)
+    at callListener (C:\Users\Admin\iptv-web-app\node_modules\ws\lib\event-target.js:290:14)
+    at WebSocket.onMessage (C:\Users\Admin\iptv-web-app\node_modules\ws\lib\event-target.js:209:9)
+    at WebSocket.emit (node:events:518:28)
+    at Receiver.receiverOnMessage (C:\Users\Admin\iptv-web-app\node_modules\ws\lib\websocket.js:1220:20) {
+  length: 102,
+  severity: 'ERROR',
+  code: '42P07',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'heap.c',
+  line: '1149',
+  routine: 'heap_create_with_catalog'
+}
+Failed to start server: error: relation "channels" already exists
+    at cn.parseErrorMessage (file:///C:/Users/Admin/iptv-web-app/node_modules/@neondatabase/serverless/index.mjs:1182:6)
+    at cn.handlePacket (file:///C:/Users/Admin/iptv-web-app/node_modules/@neondatabase/serverless/index.mjs:1143:13)
+    at cn.parse (file:///C:/Users/Admin/iptv-web-app/node_modules/@neondatabase/serverless/index.mjs:1127:36)
+    at v.<anonymous> (file:///C:/Users/Admin/iptv-web-app/node_modules/@neondatabase/serverless/index.mjs:1190:16)
+    at v.emit (file:///C:/Users/Admin/iptv-web-app/node_modules/@neondatabase/serverless/index.mjs:397:12)
+    at WebSocket.<anonymous> (file:///C:/Users/Admin/iptv-web-app/node_modules/@neondatabase/serverless/index.mjs:987:80)
+    at callListener (C:\Users\Admin\iptv-web-app\node_modules\ws\lib\event-target.js:290:14)
+    at WebSocket.onMessage (C:\Users\Admin\iptv-web-app\node_modules\ws\lib\event-target.js:209:9)
+    at WebSocket.emit (node:events:518:28)
+    at Receiver.receiverOnMessage (C:\Users\Admin\iptv-web-app\node_modules\ws\lib\websocket.js:1220:20) {
+  length: 102,
+  severity: 'ERROR',
+  code: '42P07',
+  detail: undefined,
+  hint: undefined,
+  position: undefined,
+  internalPosition: undefined,
+  internalQuery: undefined,
+  where: undefined,
+  schema: undefined,
+  table: undefined,
+  column: undefined,
+  dataType: undefined,
+  constraint: undefined,
+  file: 'heap.c',
+  line: '1149',
+  routine: 'heap_create_with_catalog'
+}
