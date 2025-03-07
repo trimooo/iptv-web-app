@@ -39,6 +39,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.post("/api/channels/m3u", async (req, res) => {
+    try {
+      const { url } = req.body;
+      const channels = await storage.addM3uPlaylist(url);
+      res.status(201).json(channels);
+    } catch (error) {
+      res.status(400).json({ message: "Failed to import M3U playlist" });
+    }
+  });
+
+  app.post("/api/channels/xtream", async (req, res) => {
+    try {
+      const { host, username, password } = req.body;
+      await storage.addXtreamCredentials(host, username, password);
+      res.status(201).json({ message: "Xtream channels imported successfully" });
+    } catch (error) {
+      res.status(400).json({ message: "Failed to import Xtream channels" });
+    }
+  });
+
   app.post("/api/channels", async (req, res) => {
     const result = insertChannelSchema.safeParse(req.body);
     if (!result.success) {

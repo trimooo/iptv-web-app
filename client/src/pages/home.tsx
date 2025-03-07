@@ -1,88 +1,72 @@
-import { useQuery } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 import CategorySidebar from "@/components/category-sidebar";
 import ChannelSidebar from "@/components/channel-sidebar";
 import VideoPlayer from "@/components/video-player";
-import { Skeleton } from "@/components/ui/skeleton";
-import type { Channel } from "@shared/schema";
-import { useState } from "react";
+import { useIPTV } from "@/context/IPTVContext";
+import LoadingScreen from "@/components/loading-screen";
+import { useState, useEffect } from "react";
+import { Menu, X } from "lucide-react";
 
 export default function Home() {
-  const { data: channels, isLoading } = useQuery<Channel[]>({
-    queryKey: ["/api/channels"],
-  });
+  const { selectedChannel, isLoading } = useIPTV();
+  const defaultVideo = {
+    name: "Welcome to IPTV",
+    url: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8",
+  };
 
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null);
-
-  // Filter channels by selected category
-  const filteredChannels = selectedCategory
-    ? channels?.filter((channel) => channel.category === selectedCategory)
-    : channels;
+  // Add debug logging
+  useEffect(() => {
+    if (selectedChannel) {
+      console.log('Playing channel:', {
+        name: selectedChannel.name,
+        url: selectedChannel.url
+      });
+    }
+  }, [selectedChannel]);
 
   if (isLoading) {
-    return (
-      <div className="flex">
-        {/* Category Sidebar (First) */}
-        <aside className="w-64 h-screen overflow-y-auto bg-gray-800 text-white p-4">
-          <h2 className="text-xl font-bold mb-4">Categories</h2>
-          <ul>
-            {Array.from({ length: 5 }).map((_, i) => (
-              <li key={i} className="mb-2">
-                <Skeleton className="h-6 w-full max-w-[150px] rounded" />
-              </li>
-            ))}
-          </ul>
-        </aside>
-
-        {/* Channel Sidebar (Second) */}
-        <aside className="w-64 h-screen overflow-y-auto bg-gray-700 text-white p-4">
-          <h2 className="text-xl font-bold mb-4">Channels</h2>
-          <ul>
-            {Array.from({ length: 8 }).map((_, i) => (
-              <li key={i} className="mb-2">
-                <Skeleton className="h-6 w-full max-w-[180px] rounded" />
-              </li>
-            ))}
-          </ul>
-        </aside>
-
-        {/* Main Content */}
-        <div className="flex-1 p-6">
-          <div className="text-center py-12 text-muted-foreground">
-            Loading channels...
-          </div>
-        </div>
-      </div>
-    );
+    return <div className="flex items-center justify-center h-screen">Loading...</div>;
   }
 
   return (
-    <div className="flex">
-      {/* Category Sidebar (First) */}
-      <CategorySidebar 
-        channels={channels} 
-        onCategorySelect={setSelectedCategory} 
-      />
-
-      {/* Channel Sidebar (Second) */}
-      <ChannelSidebar 
-        channels={filteredChannels || []} 
-        onSelectChannel={setSelectedChannel} 
-      />
+    <div className="flex flex-col lg:flex-row h-screen bg-gradient-to-br from-gray-900 to-gray-800">
+      {/* Responsive Sidebars Container */}
+      <motion.div 
+        initial={{ x: -100, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        className="lg:flex h-[40vh] lg:h-full lg:min-w-[500px] lg:max-w-[600px] border-b lg:border-r border-gray-700/50"
+      >
+        {/* Category and Channel sidebars in a row on mobile, column on desktop */}
+        <div className="flex flex-row lg:flex-row h-full">
+          <div className="w-1/3 lg:w-[200px] h-full border-r border-gray-700/50">
+            <CategorySidebar />
+          </div>
+          <div className="flex-1 h-full min-w-[300px]">
+            <ChannelSidebar />
+          </div>
+        </div>
+      </motion.div>
 
       {/* Main Content - Video Player */}
-      <div className="flex-1 p-6 flex flex-col items-center">
-        {selectedChannel ? (
-          <div className="w-full max-w-3xl">
-            <h2 className="text-xl font-bold mb-4">{selectedChannel.name}</h2>
-            <VideoPlayer url={selectedChannel.url} title={selectedChannel.name} />
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="flex-1 p-2 sm:p-4 md:p-6 flex items-center justify-center bg-gray-900/50 backdrop-blur-sm"
+      >
+        <div className="w-full max-w-[1400px] mx-auto">
+          <h2 className="text-lg md:text-xl lg:text-2xl font-bold text-white/90 mb-2 md:mb-4">
+            {selectedChannel?.name || defaultVideo.name}
+          </h2>
+          <div className="relative aspect-video rounded-lg overflow-hidden shadow-2xl">
+            <VideoPlayer 
+              url={selectedChannel?.url || defaultVideo.url}
+              title={selectedChannel?.name || defaultVideo.name}
+              buttonSize={window.innerWidth < 768 ? "small" : "medium"}
+              theme="glass"
+            />
           </div>
-        ) : (
-          <div className="text-center py-12 text-muted-foreground">
-            Select a channel to start watching.
-          </div>
-        )}
-      </div>
+        </div>
+      </motion.div>
     </div>
   );
 }

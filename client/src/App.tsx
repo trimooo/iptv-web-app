@@ -7,6 +7,7 @@ import Home from "@/pages/home";
 import Player from "@/pages/player";
 import Manage from "@/pages/manage";
 import NotFound from "@/pages/not-found";
+import { IPTVProvider } from "@/context/IPTVContext";
 
 function Router() {
   return (
@@ -26,10 +27,12 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="relative">
-        <Router />
-        <Toaster />
-      </div>
+      <IPTVProvider>
+        <div className="relative">
+          <Router />
+          <Toaster />
+        </div>
+      </IPTVProvider>
     </QueryClientProvider>
   );
 }

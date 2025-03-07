@@ -5,43 +5,120 @@ import { Input } from "@/components/ui/input";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function AddXtreamDialog() {
   const { toast } = useToast();
-  const [form, setForm] = useState({ username: "", password: "", host: "" });
+  const queryClient = useQueryClient();
+  const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const [form, setForm] = useState({
+    name: "",
+    host: "",
+    username: "",
+    password: ""
+  });
 
   const handleSubmit = async () => {
+    if (!form.host || !form.username || !form.password) {
+      toast({ 
+        title: "Missing required fields",
+        description: "Please fill in all required fields",
+        variant: "destructive" 
+      });
+      return;
+    }
+
     setLoading(true);
     try {
-      await apiRequest("POST", "/api/xtream/add", form);
-      toast({ title: "Xtream account added successfully" });
-    } catch (error) {
-      toast({ title: "Failed to add Xtream account", variant: "destructive" });
+      // Add debug logging
+      console.log("Submitting Xtream form:", { ...form, password: '***' });
+
+      const response = await apiRequest("POST", "/api/sources/xtream", {
+        ...form,
+        name: form.name || `Xtream - ${form.username}`,
+      });
+
+      console.log("Xtream response:", response);
+
+      // Invalidate queries
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["/api/sources"] }),
+        queryClient.invalidateQueries({ queryKey: ["/api/channels"] })
+      ]);
+      
+      toast({ 
+        title: "Xtream account added successfully",
+        description: "Your channels will be available shortly"
+      });
+      setOpen(false);
+      setForm({ name: "", host: "", username: "", password: "" });
+    } catch (error: any) {
+      console.error("Xtream add error:", error);
+      toast({ 
+        title: "Failed to add Xtream account",
+        description: error.message || "Please check your credentials",
+        variant: "destructive" 
+      });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="secondary">Add Xtream Account</Button>
+        <Button>Add Xtream Account</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add Xtream Account</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
-          <Input placeholder="Host (e.g., http://example.com)" name="host" value={form.host} onChange={handleChange} />
-          <Input placeholder="Username" name="username" value={form.username} onChange={handleChange} />
-          <Input type="password" placeholder="Password" name="password" value={form.password} onChange={handleChange} />
-          <Button onClick={handleSubmit} disabled={loading} className="w-full">
-            {loading ? <Loader2 className="animate-spin h-5 w-5" /> : "Save"}
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Name (Optional)</label>
+            <Input
+              placeholder="Custom name for this account"
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Host URL</label>
+            <Input
+              placeholder="http://example.com:port"
+              value={form.host}
+              onChange={(e) => setForm({ ...form, host: e.target.value })}
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Username</label>
+            <Input
+              value={form.username}
+              onChange={(e) => setForm({ ...form, username: e.target.value })}
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Password</label>
+            <Input
+              type="password"
+              value={form.password}
+              onChange={(e) => setForm({ ...form, password: e.target.value })}
+            />
+          </div>
+          <Button 
+            onClick={handleSubmit} 
+            disabled={loading} 
+            className="w-full"
+          >
+            {loading ? (
+              <span className="flex items-center">
+                <Loader2 className="animate-spin mr-2" />
+                Adding...
+              </span>
+            ) : (
+              "Add Account"
+            )}
           </Button>
         </div>
       </DialogContent>

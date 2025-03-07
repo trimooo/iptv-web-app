@@ -24,7 +24,7 @@ const createPool = () => {
 };
 
 export const pool = createPool();
-export const db = drizzle(pool, { schema });
+export const db = drizzle(pool, { schema: { channels: schema.channels } });
 
 // Initialize database and start backup schedule
 export async function initializeDatabase() {
