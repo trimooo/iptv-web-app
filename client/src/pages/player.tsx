@@ -1,5 +1,6 @@
+import React from 'react';
 import { useQuery } from "@tanstack/react-query";
-import {  useRoute  } from "wouter";
+import { useRoute } from "wouter";
 import VideoPlayer from "@/components/video-player";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
@@ -7,7 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { CalendarDays, Clock } from "lucide-react";
 import type { Channel } from "@shared/schema";
 
-export default function Player() {
+const Player: React.FC = () => {
   const [, params] = useRoute("/player/:id");
   const id = params?.id;
 
@@ -79,4 +80,6 @@ export default function Player() {
       </Card>
     </div>
   );
-}
+};
+
+export default Player;
